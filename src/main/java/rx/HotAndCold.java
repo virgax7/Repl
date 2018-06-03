@@ -18,13 +18,13 @@ public class HotAndCold {
         final Observable<Long> pinger = Observable.interval(100, MILLISECONDS);
         pinger.subscribe(i -> {
             if (i < 3) {
-                System.out.println("First subscriber pinging: " + i );
+                System.out.println("First subscriber pinging: " + i  + " in thread " + Thread.currentThread().getName());
             }
         });
         Thread.sleep(100);
         pinger.subscribe(i -> {
             if (i < 3) {
-                System.out.println("  Second subscriber pinging: " + i );
+                System.out.println("  Second subscriber pinging: " + i + " in thread " + Thread.currentThread().getName() );
             }
         });
         Thread.sleep(400);
@@ -36,10 +36,10 @@ public class HotAndCold {
         // since it doesn't rerun the subscribe handler, if you jumped in the stream to late, you won't be given the emissions
         // that flow down it
         final ConnectableObservable<Long> ping = Observable.interval(100, MILLISECONDS).publish();
-        ping.subscribe(i -> System.out.println("First subscriber pinging: " + i));
+        ping.subscribe(i -> System.out.println("First subscriber pinging: " + i + " in thread " + Thread.currentThread().getName()));
         ping.connect();
         Thread.sleep(300);
-        ping.subscribe(i -> System.out.println("    Second subscriber pinging:" + i ));
+        ping.subscribe(i -> System.out.println("    Second subscriber pinging:" + i + " in thread " + Thread.currentThread().getName() ));
         Thread.sleep(500);
         // notice how the second subscriber doesn't start by pinging 0, it starts from when it jumped in the stream
         // this further enhances leverages observer pattern where if you just subscribe in time, then you just get notified
