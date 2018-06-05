@@ -64,6 +64,12 @@ public class ObservableFactories {
         System.out.println("--------------------------------------------");
 
         // defer is useful for making new parameterized streams
+        // defer is lazy in creation of the underlying Observable..
+        // This is why the below behaviors are the way it is
+        // defer saves the function used to create the underlying Observable
+        // for example () -> Observable.just(item1.getValue())
+        // and only calls that after we subscribe to it.. thats why  the first subscribe prints 1
+        // and the second guy prints 2
         MutableInt item1 = new MutableInt(1);
         Observable<Integer> numbas = Observable.defer(() -> Observable.just(item1.getValue()));
 
